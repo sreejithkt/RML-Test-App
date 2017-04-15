@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Angular2 Application</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <!-- 1. Load libraries -->
+     <!-- Polyfill(s) for older browsers -->
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <!-- 2. Configure SystemJS -->
+    <script src="systemjs.config.js"></script>
+    <script>
+      System.import('app').catch(function(err){ console.error(err); });
+    </script>
+	<script type="text/javascript">
+function createTable()
+{
+    var num_rows = document.getElementById('rows').value;
+    var num_cols = document.getElementById('cols').value;
+    var theader = '<table border="1">\n';
+    var tbody = '';
+
+    for( var i=0; i<num_rows;i++)
+    {
+        tbody += '<tr>';
+        for( var j=0; j<num_cols;j++)
+        {
+            tbody += '<td>';
+            tbody += 'Cell ' + i + ',' + j;
+            tbody += '</td>'
+        }
+        tbody += '</tr>\n';
+    }
+    var tfooter = '</table>';
+    document.getElementById('wrapper').innerHTML = theader + tbody + tfooter;
+	
+	var objConnection = new ActiveXObject("adodb.connection");
+    <!--var strConn = "driver={sql server};server=laptop-gngnovq6\sqlexpress;database=GoogleSheet;uid=sa;password=test123";   Provider=SQLOLEDB;User ID=sa;Password=test123-->
+	<!--var strcon = "Data Source=laptop-gngnovq6\sqlexpress;Initial Catalog=GoogleSheet;Provider=SQLOLEDB;Trusted_Connection=yes;Integrated Security=True"; -->
+	var strcon = "Data Source=localhost;Initial Catalog=GoogleSheet;Integrated Security=True;"
+    objConnection.Open(strcon);
+    var rs = new ActiveXObject("ADODB.Recordset");
+	rs.Open("SELECT * FROM IterationData", objConnection);
+	rs.MoveFirst
+	while(!rs.eof)
+	{
+    document.write(rs.fields(1));
+    rs.movenext;
+	}
+	rs.close;
+	connection.close;
+}
+
+</script>
+  </head>
+  <!-- 3. Display the application -->
+  <body>
+    <my-app>Test Application</my-app>
+	<form name="tablegen">
+	<label>Rows: <input type="text" name="rows" id="rows"/></label>
+	<label>Cols: <input type="text" name="cols" id="cols"/></label><br/><br/>
+	<input name="generate" type="button" value="Create Table" onclick='createTable();'/>
+</form>
+
+<div id="wrapper"></div>
+  </body>
+</html>
